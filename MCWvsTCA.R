@@ -10,10 +10,13 @@ colnames(sum) <- c("TCA", "MCW", "Frequency", "Neighbors")
 
 stats = merge(stats, sum)
 
-png('MCWvTCA.png', w=2000, h=1000)
+png('MCWvTCA.png', w=2000, h=500)
 ggplot(stats, aes(x=TCA, y=MCW, size=Frequency)) +
     geom_point() +
     geom_abline(intercept=25*6,slope=-1) +
     geom_smooth() +
-    geom_text(aes(label=Player), stats[stats$Frequency==1 & stats$Neighbors==1,], nudge_y=0.333, size=4)
+    geom_label(aes(label=Player), alpha=0.65, stats[stats$Frequency==1 & stats$Neighbors==1,], hjust=0, vjust=0.5, nudge_x=.1, size=3) +
+    scale_x_continuous(breaks=seq(0,150,10), minor_breaks = seq(0,150)) +
+    scale_y_continuous(breaks=seq(0,35,10), minor_breaks = seq(0,35)) +
+    coord_fixed()
 dev.off()
