@@ -17,6 +17,8 @@ p = ggplot(stats, aes(x=TCA, y=MCW, size=Frequency,color=MCW/TCA)) +
     geom_abline(intercept=25*6,slope=-1) +
     geom_abline(intercept=0,slope=1) +
     geom_smooth(show.legend=F) +
+    annotate("text",x=41,y=41,label="MCW > TCA       MCW < TCA",fontface="bold") +
+    annotate("text",x=109,y=41,label="Maximum Possible",fontface="bold",angle=-45,hjust=0,vjust=-0.25) +
     geom_label(aes(label=Player), alpha=0.65, stats[stats$Frequency==1 & stats$Neighbors==1,], hjust=0, vjust=0.5, size=3) +
     scale_x_continuous(breaks=seq(0,150,10), minor_breaks = seq(0,150), limits=c(-2,152), expand=c(0,0)) +
     scale_y_continuous(breaks=seq(0,40,10), minor_breaks = seq(0,40), limits=c(-2,42), expand=c(0,0)) +
