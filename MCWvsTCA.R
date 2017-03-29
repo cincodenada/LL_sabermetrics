@@ -1,13 +1,26 @@
 library(ggplot2)
 library(plyr)
 
-neighbor_limit = 5
+neighbor_limit = 1
 
 stats = read.csv('LL72_Leaguewide_MD25.csv')
 sum = aggregate(Season ~ TCA + MCW, stats, length)
 # This is pretty ugly, but does a decent job of highlighting interesting bits
 # It just finds anyone who doesn't have close neighbors along the TCA axis (that is, people with a similar number of TCA who got the same number of MCWAs)
-sum = adply(sum, 1, function(x) { sum(sum[sum$MCW==x$MCW & sum$TCA > x$TCA-neighbor_limit & sum$TCA < x$TCA+neighbor_limit,]$Season) - 1 })
+sum = adply(sum, 1, function(x) { sum(sum[
+    (
+        sum$MCW==x$MCW &
+        sum$TCA >= x$TCA-neighbor_limit &
+        sum$TCA <= x$TCA+neighbor_limit
+    )
+    |
+    (
+        sum$TCA==x$TCA &
+        sum$MCW >= x$MCW-neighbor_limit &
+        sum$MCW <= x$MCW+neighbor_limit
+    )
+
+,]$Season) - 1 })
 colnames(sum) <- c("TCA", "MCW", "Frequency", "Neighbors")
 print(paste("Found",nrow(sum[sum$Neighbors==0,]),"outliers"))
 
