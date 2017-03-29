@@ -12,11 +12,10 @@ colnames(sum) <- c("TCA", "MCW", "Frequency", "Neighbors")
 print(paste("Found",nrow(sum[sum$Neighbors==0,]),"outliers"))
 
 stats = merge(stats, sum)
-stats$RundleNumber = sapply(substr(stats$Rundle,1,1), function(x) { strtoi(charToRaw(x)) - strtoi(charToRaw('A')) + 1})
-stats$RundleLetter = ordered(as.numeric(stats$RundleNumber), levels=c(1,2,3,4,5,12), labels=c('A','B','C','D','E','R'))
+stats$Rundle = ordered(substr(stats$Rundle,1,1))
 
-p = ggplot(stats, aes(x=TCA, y=MCW, size=Frequency,color=RundleNumber)) +
-    geom_point(shape=19) +
+p = ggplot(stats, aes(x=TCA, y=MCW)) +
+    geom_jitter(aes(color=Rundle), shape=19) +
     geom_abline(intercept=25*6,slope=-1) +
     geom_abline(intercept=0,slope=1) +
     geom_smooth(show.legend=F,color="black",alpha=0.75) +
@@ -25,6 +24,7 @@ p = ggplot(stats, aes(x=TCA, y=MCW, size=Frequency,color=RundleNumber)) +
     geom_label(aes(label=Player), alpha=0.65, stats[stats$Frequency==1 & stats$Neighbors==0,], hjust=0.5, vjust=0, size=3, show.legend=F) +
     scale_x_continuous(breaks=seq(0,150,10), minor_breaks = seq(0,150), limits=c(-2,152), expand=c(0,0)) +
     scale_y_continuous(breaks=seq(0,40,10), minor_breaks = seq(0,40), limits=c(-2,42), expand=c(0,0)) +
+    scale_color_hue(c=c(rep(100,5),0)) +
     coord_fixed() +
     labs(title="Number of MCWAs vs TCA in LL72") +
     theme(legend.position="bottom")
